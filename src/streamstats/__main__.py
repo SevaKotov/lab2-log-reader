@@ -1,11 +1,17 @@
 import argparse
 import sys
+
 from pathlib import Path
 
-from streamstats.report import build_report, write_csv, write_json
+from streamstats.report import build_report
+from streamstats.report import write_csv
+from streamstats.report import write_json
 
-from .analysis import Stats, analyze_csv, analyze_json
-from .errors import Invalid_Format, Stream_Stats_Error, Invalid_Command
+from .analysis import Stats
+from .analysis import analyze_csv
+from .analysis import analyze_json
+from .errors import Invalid_Format
+from .errors import Stream_Stats_Error
 
 
 def build_parser()->argparse.ArgumentParser:
@@ -20,7 +26,7 @@ def build_parser()->argparse.ArgumentParser:
     analyze = sub.add_parser("analyze", help="Analyze one or more event files")
     analyze.add_argument("inputs", nargs="+", type=Path, metavar="Input", help="One or more input csv or/and jsonl files")
     analyze.add_argument("--format", choices=["csv", "jsonl"], required=True, help="Input file format")
-    analyze.add_argument("--output", required=True, metavar="REPORT.json", help="Path to write a json report")
+    analyze.add_argument("--output", required=True, type=Path, metavar="REPORT.json", help="Path to write a json report")
     analyze.add_argument("--skip-invalid", action="store_true", help="Skip invalid lines instead of falling")
 
     return parser
@@ -38,10 +44,10 @@ def main(argv=None):
             else:
                 raise Invalid_Format("Invalid input format")
             rp = build_report(stats)
-            if args.output.endswith(".csv"):
+            if args.output.suffix == ".csv":
                 write_csv(rp, args.output)
                 return 0
-            elif args.output.endswith(".json"):
+            elif args.output.suffix == ".json":
                 write_json(rp, args.output)
                 return 0
             else:

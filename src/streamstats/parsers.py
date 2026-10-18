@@ -2,8 +2,11 @@ import csv
 import json
 import logging
 
-from .errors import Invalid_Event, Invalid_Path, InvalidTimestampError
-from .models import LEVELS, Event
+from .errors import InvalidTimestampError
+from .errors import Invalid_Event
+from .errors import Invalid_Path
+from .models import LEVELS
+from .models import Event
 
 logger = logging.getLogger(__name__)
 

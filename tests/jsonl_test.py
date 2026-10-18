@@ -1,6 +1,7 @@
 import pytest
 
-from streamstats.errors import Invalid_Event, Invalid_Path
+from streamstats.errors import Invalid_Event
+from streamstats.errors import Invalid_Path
 from streamstats.parsers import json_parser
 
 

@@ -1,5 +1,6 @@
 from .models import Stats
-from .parsers import csv_parser, json_parser
+from .parsers import csv_parser
+from .parsers import json_parser
 
 
 def analyze_csv(data: list, stats: Stats, skip_error: bool) -> None:

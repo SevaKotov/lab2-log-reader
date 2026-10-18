@@ -1,6 +1,8 @@
 import csv
 import json
+
 from collections import Counter
+from pathlib import Path
 
 from .analysis import Stats
 
@@ -21,14 +23,14 @@ def build_report(stats: Stats) -> dict:
 
     return report
 
-def write_json(report: dict, output_path: str) -> None:
+def write_json(report: dict, output_path: Path) -> None:
     """Сохраняет словарь в файл"""
-    with open(output_path, "w", encoding="utf-8") as f:
+    with output_path.open("w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
 
-def write_csv(report: dict, output_path: str) -> None:
+def write_csv(report: dict, output_path: Path) -> None:
     """Сохраняет готовый отчет в CSV"""
-    with open(output_path, "w", newline="", encoding="utf-8") as f:
+    with output_path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(["metric", "value"])
 
