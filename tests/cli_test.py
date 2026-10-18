@@ -40,7 +40,7 @@ def test_cli_bad_line_returns_2(tmp_path):
 
 
 def test_cli_skip_invalid_and_multiple_files(tmp_path):
-    """--skip-invalid + два файла: объединение, пропуск, счётчик."""
+    """--skip-invalid + два файла: объединение, пропуск, счётчик"""
     f1 = tmp_path / "a.jsonl"
     f1.write_text(
         '{"timestamp":"2024-05-01T10:00:00Z","level":"INFO","source":"auth","message":"ok"}\n'

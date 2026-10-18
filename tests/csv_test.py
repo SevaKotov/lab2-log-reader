@@ -1,7 +1,9 @@
+
 import pytest
 
 from streamstats.errors import Invalid_Event
 from streamstats.errors import Invalid_Path
+from streamstats.models import Stats
 from streamstats.parsers import csv_parser
 
 
@@ -15,7 +17,8 @@ def test_csv_valid(tmp_path):
         encoding="utf-8",
     )
 
-    events = list(csv_parser([p], skip_error=False))
+    stats = Stats()
+    events = list(csv_parser([p], skip_error=False, stats=stats))
 
     assert len(events) == 2
     assert events[0].level == "INFO"
@@ -25,9 +28,13 @@ def test_csv_valid(tmp_path):
 def test_csv_empty_file(tmp_path):
     """Пустой файл — ноль событий, без падения."""
     p = tmp_path / "empty.csv"
-    p.write_text("timestamp,level,source,message\n", encoding="utf-8")
+    p.write_text(
+        "timestamp,level,source,message\n",
+        encoding="utf-8",
+    )
 
-    events = list(csv_parser([p], skip_error=False))
+    stats = Stats()
+    events = list(csv_parser([p], skip_error=False, stats=stats))
 
     assert events == []
 
@@ -41,12 +48,13 @@ def test_csv_bad_line_strict(tmp_path):
         encoding="utf-8",
     )
 
+    stats = Stats()
     with pytest.raises(Invalid_Event):
-        list(csv_parser([p], skip_error=False))
+        list(csv_parser([p], skip_error=False, stats=stats))
 
 
 def test_csv_bad_line_skipped(tmp_path, caplog):
-    """Битая строка с skip_error=True — пропущена, WARNING в логе."""
+    """Битая строка с skip_error=True — пропущена, WARNING в логе"""
     p = tmp_path / "bad.csv"
     p.write_text(
         "timestamp,level,source,message\n"
@@ -55,7 +63,8 @@ def test_csv_bad_line_skipped(tmp_path, caplog):
         encoding="utf-8",
     )
 
-    events = list(csv_parser([p], skip_error=True))
+    stats = Stats()
+    events = list(csv_parser([p], skip_error=True, stats=stats))
 
     assert len(events) == 1
     assert events[0].level == "INFO"
@@ -64,5 +73,10 @@ def test_csv_bad_line_skipped(tmp_path, caplog):
 
 def test_csv_missing_file(tmp_path):
     """Несуществующий файл — Invalid_Path."""
+    stats = Stats()
     with pytest.raises(Invalid_Path):
-        list(csv_parser([tmp_path / "no_such.csv"], skip_error=False))
+        list(csv_parser(
+            [tmp_path / "no_such.csv"],
+            skip_error=False,
+            stats=stats,
+        ))

@@ -28,6 +28,25 @@ def validation(num: int, info: dict, path: str, skip_error: bool, stats: Stats) 
         else:
             raise Invalid_Event(f"{path}:{num}: invalid level: {info.get('level')!r}")
 
+    required_fields = ["timestamp", "level", "source", "message"]
+
+    for field in required_fields:
+        if field not in info:
+            error = f"missing required field: {field}"
+            if skip_error:
+                logger.warning(f"WARNING: {path}:{num}: {error}")
+                stats.skip_invalid += 1
+                return False
+            raise Invalid_Event(f"{path}:{num}: {error}")
+
+    if not isinstance(info["timestamp"], str) or not info["timestamp"].strip():
+        error = "timestamp must be a non-empty string"
+        if skip_error:
+            logger.warning(f"WARNING: {path}:{num}: {error}")
+            stats.skip_invalid += 1
+            return False
+        raise Invalid_Event(f"{path}:{num}: {error}")
+
     if not isinstance(info.get("source"), str) or len(info.get("source")) == 0:
         if skip_error:
             logger.warning(f"WARNING: {path}:{num}: empty source")
