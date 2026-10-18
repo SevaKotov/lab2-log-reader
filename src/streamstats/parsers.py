@@ -7,36 +7,50 @@ from .errors import Invalid_Event
 from .errors import Invalid_Path
 from .models import LEVELS
 from .models import Event
+from .models import Stats
 
 logger = logging.getLogger(__name__)
 
 
-def validation(num: int, info: dict, path: str, skip_error: bool) -> bool:
-    """Валидация события. Возвращает True, если событие валидное"""
+def validation(num: int, info: dict, path: str, skip_error: bool, stats: Stats) -> bool:
+    """Валидация события, возвращает True, если событие валидное"""
+    if not isinstance(info, dict):
+        if skip_error:
+            logger.warning(f"WARNING: {path}:{num}: event must be an object")
+            stats.skip_invalid += 1
+            return False
+        raise Invalid_Event(f"{path}:{num}: event must be an object")
     if info.get("level") not in LEVELS:
         if skip_error:
             logger.warning(f"WARNING: {path}:{num}: invalid level: {info.get('level')!r}")
+            stats.skip_invalid += 1
             return False
-        raise Invalid_Event(f"{path}:{num}: invalid level: {info.get('level')!r}")
+        else:
+            raise Invalid_Event(f"{path}:{num}: invalid level: {info.get('level')!r}")
 
-    if not info.get("source"):
+    if not isinstance(info.get("source"), str) or len(info.get("source")) == 0:
         if skip_error:
             logger.warning(f"WARNING: {path}:{num}: empty source")
+            stats.skip_invalid += 1
             return False
-        raise Invalid_Event(f"{path}:{num}: empty source")
-
+        else:
+            raise Invalid_Event(f"{path}:{num}: empty source")
     return True
 
 
-def csv_parser(data: list, skip_error: bool):
+def csv_parser(data: list, skip_error: bool, stats: Stats):
     """Читает CSV-файлы построчно и отдаёт Event"""
     for path in data:
         try:
             with path.open(newline="", encoding="utf-8") as file:
-                # Проверка на заголовок
                 first_line = file.readline()
                 file.seek(0)
-                if "timestamp" in first_line:
+                header = next(csv.reader([first_line]), [])
+                header = [column.strip() for column in header]
+
+                expected_header = ["timestamp", "level", "source", "message"]
+                has_header = header == expected_header
+                if has_header:
                     reader = csv.DictReader(file)
                 else:
                     reader = csv.DictReader(
@@ -48,13 +62,14 @@ def csv_parser(data: list, skip_error: bool):
                     count += 1
                     if not line:
                         continue
-                    if not validation(num, line, str(path), skip_error):
+                    if not validation(num, line, str(path), skip_error, stats):
                         continue
                     try:
                         yield Event.from_dict(line)
                     except (Invalid_Event, InvalidTimestampError, ValueError) as e:
                         if skip_error:
                             logger.warning(f"WARNING: {path}:{num}: {e}")
+                            stats.skip_invalid += 1
                             continue
                         raise Invalid_Event(f"{path}:{num}: {e}") from e
 
@@ -69,8 +84,8 @@ def csv_parser(data: list, skip_error: bool):
             raise Invalid_Path(f"Can't open {path}: {e}") from e
 
 
-def json_parser(data: list, skip_error: bool):
-    """Читает JSONL-файлы построчно и отдаёт Event."""
+def json_parser(data: list, skip_error: bool, stats: Stats):
+    """Читает JSONL-файлы построчно и отдаёт Event"""
     for path in data:
         try:
             with path.open(encoding="utf-8") as file:
@@ -80,32 +95,32 @@ def json_parser(data: list, skip_error: bool):
                     if not line:
                         continue
                     count += 1
-
                     try:
                         event_dict = json.loads(line)
                     except json.JSONDecodeError as e:
                         if skip_error:
                             logger.warning(f"WARNING: {path}:{num}: {e}")
+                            stats.skip_invalid += 1
                             continue
                         raise Invalid_Event(f"{path}:{num}: {e}") from e
 
-                    if not validation(num, event_dict, str(path), skip_error):
+                    if not validation(num, event_dict, str(path), skip_error, stats):
                         continue
-
                     try:
                         yield Event.from_dict(event_dict)
                     except (Invalid_Event, InvalidTimestampError, ValueError) as e:
                         if skip_error:
                             logger.warning(f"WARNING: {path}:{num}: {e}")
+                            stats.skip_invalid += 1
                             continue
                         raise Invalid_Event(f"{path}:{num}: {e}") from e
 
                 if count == 0:
                     logger.warning(f"WARNING: {path} is empty")
 
-        except FileNotFoundError:
-            raise Invalid_Path(f"Invalid path: {path}")
-        except PermissionError:
-            raise Invalid_Path(f"No access to file: {path}")
+        except FileNotFoundError as e:
+            raise Invalid_Path(f"Invalid path: {path}") from e
+        except PermissionError as e:
+            raise Invalid_Path(f"No access to file: {path}") from e
         except OSError as e:
-            raise Invalid_Path(f"Can't open {path}: {e}")
+            raise Invalid_Path(f"Can't open {path}: {e}") from e

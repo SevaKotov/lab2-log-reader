@@ -18,7 +18,8 @@ def build_report(stats: Stats) -> dict:
         "first_timestamp": stats.f_timestamp.isoformat() if stats.f_timestamp else None,
     "last_timestamp": stats.l_timestamp.isoformat() if stats.l_timestamp else None,
         "sources": dict(Counter(stats.sources)),
-        "top_error_sources": top_list
+        "top_error_sources": top_list,
+        "skipped_lines": stats.skip_invalid
     }
 
     return report
@@ -37,6 +38,7 @@ def write_csv(report: dict, output_path: Path) -> None:
         writer.writerow(["total_events", report["total_events"]])
         writer.writerow(["first_timestamp", report["first_timestamp"]])
         writer.writerow(["last_timestamp", report["last_timestamp"]])
+        writer.writerow(["Skipped_lines", report["skipped_lines"]])
 
         for level, count in report["levels"].items():
             writer.writerow([f"level_{level}", count])

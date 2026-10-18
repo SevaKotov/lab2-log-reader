@@ -34,6 +34,7 @@ class Stats:
         self.top_five = []
         self.f_timestamp = None
         self.l_timestamp = None
+        self.skip_invalid = 0
 
     def add_event(self, event: Event) -> None:
         """метод класса для обработки ивента"""
