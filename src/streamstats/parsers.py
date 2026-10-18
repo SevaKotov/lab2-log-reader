@@ -32,30 +32,34 @@ def validation(num: int, info: dict, path: str, skip_error: bool, stats: Stats) 
 
     for field in required_fields:
         if field not in info:
-            error = f"missing required field: {field}"
             if skip_error:
-                logger.warning(f"WARNING: {path}:{num}: {error}")
+                logger.warning(f"WARNING: {path}:{num}: missing required field: {field}")
                 stats.skip_invalid += 1
                 return False
-            raise Invalid_Event(f"{path}:{num}: {error}")
+            raise Invalid_Event(f"{path}:{num}: missing required field: {field}")
 
     if not isinstance(info["timestamp"], str) or not info["timestamp"].strip():
-        error = "timestamp must be a non-empty string"
         if skip_error:
-            logger.warning(f"WARNING: {path}:{num}: {error}")
+            logger.warning(f"WARNING: {path}:{num}: timestamp must be a non-empty string")
             stats.skip_invalid += 1
             return False
-        raise Invalid_Event(f"{path}:{num}: {error}")
+        raise Invalid_Event(f"{path}:{num}: timestamp must be a non-empty string")
 
-    if not isinstance(info.get("source"), str) or len(info.get("source")) == 0:
+    if not isinstance(info.get("source"), str) or len(info.get("source").strip()) == 0:
         if skip_error:
             logger.warning(f"WARNING: {path}:{num}: empty source")
             stats.skip_invalid += 1
             return False
         else:
             raise Invalid_Event(f"{path}:{num}: empty source")
+    if not isinstance(info.get("message"), str):
+        if skip_error:
+            logger.warning(f"WARNING: {path}:{num}: not str message")
+            stats.skip_invalid += 1
+            return False
+        else:
+            raise Invalid_Event(f"{path}:{num}: not str message")
     return True
-
 
 def csv_parser(data: list, skip_error: bool, stats: Stats):
     """Читает CSV-файлы построчно и отдаёт Event"""
@@ -77,7 +81,9 @@ def csv_parser(data: list, skip_error: bool, stats: Stats):
                         fieldnames=["timestamp", "level", "source", "message"],
                     )
                 count = 0
-                for num, line in enumerate(reader, start=2):
+
+                start_num = 2 if has_header else 1
+                for num, line in enumerate(reader, start=start_num):
                     count += 1
                     if not line:
                         continue
