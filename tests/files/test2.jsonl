@@ -1,0 +1,20 @@
+{"timestamp": "2026-10-13T14:00:00Z", "level": "INF", "source": "payments", "message": "Платёж принят"}
+{"timestamp": "2026-10-13T14:00:30Z", "level": "DEBUG", "source": "cache", "message": "Проверка ключа кэша"}
+{"timestamp": "2026-10-13T14:01:00Z", "level": "WARNING", "source": "payments", "message": "Ответ платёжного шлюза задерживается"}
+{"timestamp": "2026-10-13T14:01:45Z", "level": "ERROR", "source": "gateway", "message": "Шлюз вернул ошибку"}
+{"timestamp": "2026-10-13T14:02:10Z", "level": "INFO", "source": "notifications", "message": "Уведомление поставлено в очередь"}
+{"timestamp": "2026-10-13T14:02:50Z", "level": "CRITICAL", "source": "database", "message": "Потеряно соединение с основной базой"}
+{"timestamp": "2026-10-13T14:03:20Z", "level": "ERROR", "source": "payments", "message": "Не удалось подтвердить платёж"}
+{"timestamp": "2026-10-13T14:04:00Z", "level": "DEBUG", "source": "gateway", "message": "Получены заголовки ответа"}
+{"timestamp": "2026-10-13T14:04:35Z", "level": "WARNING", "source": "cache", "message": "Достигнут порог заполнения кэша"}
+{"timestamp": "2026-10-13T14:05:00Z", "level": "INFO", "source": "database", "message": "Транзакция сохранена"}
+{"timestamp": "2026-10-13T14:05:40Z", "level": "ERROR", "source": "notifications", "message": "Не удалось отправить уведомление"}
+{"timestamp": "2026-10-13T14:06:15Z", "level": "INFO", "source": "gateway", "message": "Запрос обработан"}
+{"timestamp": "2026-10-13T14:07:00Z", "level": "CRITICAL", "source": "payments", "message": "Обработка платежей остановлена"}
+{"timestamp": "2026-10-13T14:07:30Z", "level": "ERROR", "source": "database", "message": "Ошибка выполнения запроса"}
+{"timestamp": "2026-10-13T14:08:00Z", "level": "WARNING", "source": "notifications", "message": "Очередь уведомлений почти заполнена"}
+{"timestamp": "2026-10-13T14:08:45Z", "level": "INFO", "source": "cache", "message": "Кэш обновлён"}
+{"timestamp": "2026-10-13T14:09:10Z", "level": "ERROR", "source": "gateway", "message": "Превышено время ожидания"}
+{"timestamp": "2026-10-13T14:10:00Z", "level": "DEBUG", "source": "database", "message": "Подготовлен SQL-запрос"}
+{"timestamp": "2026-10-13T14:10:30Z", "level": "INFO", "source": "payments", "message": "Платёж успешно завершён"}
+{"timestamp": "2026-10-13T14:11:00Z", "level": "ERROR", "source": "cache", "message": "Не удалось обновить запись"}

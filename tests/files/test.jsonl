@@ -1,0 +1,20 @@
+{"timestamp": "2026-10-12T09:00:00Z", "level": "INFO", "source": "auth", "message": "Пользователь вошёл в систему"}
+{"timestamp": "2026-10-12T09:01:12Z", "level": "DEBUG", "source": "api", "message": "Получен запрос GET /health"}
+{"timestamp": "2026-10-12T09:02:30Z", "level": "WARNING", "source": "database", "message": "Высокое время ответа"}
+{"timestamp": "2026-10-12T09:03:05Z", "level": "ERROR", "source": "api", "message": "Не удалось обработать запрос"}
+{"timestamp": "2026-10-12T09:04:10Z", "level": "CRITICAL", "source": "database", "message": "Соединение с базой потеряно"}
+{"timestamp": "2026-10-12T09:05:00Z", "level": "ERROR", "source": "auth", "message": "Ошибка проверки токена"}
+{"timestamp": "2026-10-12T09:06:45Z", "level": "INFO", "source": "scheduler", "message": "Задача завершена"}
+{"timestamp": "2026-10-12T09:07:20Z", "level": "ERROR", "source": "api", "message": "Внутренняя ошибка сервера"}
+{"timestamp": "2026-10-12T09:08:00Z", "level": "WARNING", "source": "auth", "message": "Повторная попытка входа"}
+{"timestamp": "2026-10-12T09:09:15Z", "level": "INFO", "source": "database", "message": "Запрос выполнен успешно"}
+{"timestamp": "2026-10-12T09:10:00Z", "level": "ERROR", "source": "worker", "message": "Задача завершилась с ошибкой"}
+{"timestamp": "2026-10-12T09:11:30Z", "level": "CRITICAL", "source": "api", "message": "Сервис временно недоступен"}
+{"timestamp": "2026-10-12T09:12:00Z", "level": "DEBUG", "source": "worker", "message": "Начата обработка задания"}
+{"timestamp": "2026-10-12T09:13:40Z", "level": "ERROR", "source": "database", "message": "Транзакция отклонена"}
+{"timestamp": "2026-10-12T09:14:00Z", "level": "INFO", "source": "monitor", "message": "Проверка состояния завершена"}
+{"timestamp": "2026-10-12T09:15:25Z", "level": "ERROR", "source": "auth", "message": "Недействительные учётные данные"}
+{"timestamp": "2026-10-12T09:16:00Z", "level": "WARNING", "source": "monitor", "message": "Загрузка процессора повышена"}
+{"timestamp": "2026-10-12T09:17:50Z", "level": "INFO", "source": "api", "message": "Ответ отправлен клиенту"}
+{"timestamp": "2026-10-12T09:18:30Z", "level": "ERROR", "source": "worker", "message": "Не удалось выполнить задачу"}
+{"timestamp": "2026-10-12T09:19:00Z", "level": "DEBUG", "source": "monitor", "message": "Проверка метрик"}
