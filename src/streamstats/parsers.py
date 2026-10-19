@@ -20,13 +20,6 @@ def validation(num: int, info: dict, path: str, skip_error: bool, stats: Stats) 
             stats.skip_invalid += 1
             return False
         raise Invalid_Event(f"{path}:{num}: event must be an object")
-    if info.get("level") not in LEVELS:
-        if skip_error:
-            logger.warning(f"WARNING: {path}:{num}: invalid level: {info.get('level')!r}")
-            stats.skip_invalid += 1
-            return False
-        else:
-            raise Invalid_Event(f"{path}:{num}: invalid level: {info.get('level')!r}")
 
     required_fields = ["timestamp", "level", "source", "message"]
 
@@ -37,6 +30,14 @@ def validation(num: int, info: dict, path: str, skip_error: bool, stats: Stats) 
                 stats.skip_invalid += 1
                 return False
             raise Invalid_Event(f"{path}:{num}: missing required field: {field}")
+
+    if info.get("level") not in LEVELS:
+        if skip_error:
+            logger.warning(f"WARNING: {path}:{num}: invalid level: {info.get('level')!r}")
+            stats.skip_invalid += 1
+            return False
+        else:
+            raise Invalid_Event(f"{path}:{num}: invalid level: {info.get('level')!r}")
 
     if not isinstance(info["timestamp"], str) or not info["timestamp"].strip():
         if skip_error:
